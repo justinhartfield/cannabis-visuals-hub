@@ -115,7 +115,7 @@ const FeaturedImages = () => {
               <Chip
                 key={category}
                 variant={activeCategory === category ? "primary" : "outline"}
-                onClick={() => setActiveCategory(category)}
+                onClick={() => setActiveCategory(category as "All" | Category)}
                 className="cursor-pointer"
               >
                 {category}
@@ -130,7 +130,7 @@ const FeaturedImages = () => {
               key={image.id}
               id={image.id}
               src={image.src}
-              title={image.title}
+              name={image.title}
               category={image.category}
               isPremium={image.isPremium}
               isBlurred={image.isBlurred}

@@ -2,13 +2,10 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import SearchBar from "@/components/ui/SearchBar";
-import ImageCard from "@/components/ui/ImageCard";
-import Chip from "@/components/ui/Chip";
-import { Button } from "@/components/ui/button";
-import { Filter, SlidersHorizontal, Grid3X3, Grid2X2 } from "lucide-react";
 import { Category } from "@/types/imageTypes";
-import CategoryFilter from "@/components/ui/CategoryFilter";
+import GalleryHeader from "@/components/gallery/GalleryHeader";
+import GalleryFilters from "@/components/gallery/GalleryFilters";
+import GalleryGrid from "@/components/gallery/GalleryGrid";
 
 // Sample data - in a real app, this would come from an API
 const categories = [
@@ -175,6 +172,16 @@ const Gallery = () => {
     setFilteredImages(filtered);
   };
 
+  const handleResetFilters = () => {
+    setSearchTerm("");
+    setActiveCategory("All");
+    setFilteredImages(galleryImages);
+  };
+
+  const handleLoadMore = () => {
+    console.log("Load more images");
+  };
+
   return (
     <>
       <Helmet>
@@ -187,156 +194,25 @@ const Gallery = () => {
       <main>
         <section className="pt-32 pb-16">
           <div className="container mx-auto px-4">
-            <div className="text-center max-w-3xl mx-auto mb-12">
-              <h1 className="text-3xl font-bold text-white mb-4">Cannabis Image Gallery</h1>
-              <p className="text-white/70">
-                Browse our extensive collection of high-quality cannabis imagery. Search, filter, and download 
-                the perfect visuals for your projects.
-              </p>
-            </div>
+            <GalleryHeader onSearch={handleSearch} />
             
-            <div className="mb-8">
-              <SearchBar 
-                placeholder="Search by name, strain, or category..."
-                onSearch={handleSearch}
-              />
-            </div>
+            <GalleryFilters 
+              categories={categories}
+              activeCategory={activeCategory}
+              onCategoryChange={handleCategoryChange}
+              showFilters={showFilters}
+              setShowFilters={setShowFilters}
+              gridView={gridView}
+              setGridView={setGridView}
+              onClearFilters={handleResetFilters}
+            />
             
-            <div className="flex flex-col md:flex-row justify-between gap-4 mb-8">
-              <div className="flex items-center gap-2 overflow-x-auto pb-2 max-w-full">
-                {categories.map(category => (
-                  <Chip
-                    key={category}
-                    variant={activeCategory === category ? "primary" : "outline"}
-                    onClick={() => handleCategoryChange(category)}
-                  >
-                    {category}
-                  </Chip>
-                ))}
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="border-white/20 text-white/70 hover:bg-white/10"
-                  onClick={() => setShowFilters(!showFilters)}
-                >
-                  <Filter size={16} className="mr-2" />
-                  Filters
-                </Button>
-                
-                <div className="flex border border-white/20 rounded-md overflow-hidden">
-                  <button
-                    className={`p-2 ${gridView === "default" ? "bg-white/10 text-white" : "bg-transparent text-white/50"}`}
-                    onClick={() => setGridView("default")}
-                    aria-label="Default grid view"
-                  >
-                    <Grid3X3 size={16} />
-                  </button>
-                  <button
-                    className={`p-2 ${gridView === "large" ? "bg-white/10 text-white" : "bg-transparent text-white/50"}`}
-                    onClick={() => setGridView("large")}
-                    aria-label="Large grid view"
-                  >
-                    <Grid2X2 size={16} />
-                  </button>
-                </div>
-              </div>
-            </div>
-            
-            {showFilters && (
-              <div className="mb-8 glass p-4 rounded-lg animate-fade-in">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-white font-medium">Advanced Filters</h3>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-white/70 hover:text-white"
-                  >
-                    <SlidersHorizontal size={16} className="mr-2" />
-                    Clear All
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-white/70 text-sm mb-2">Content Type</label>
-                    <select className="w-full bg-secondary/50 border border-white/10 rounded-md p-2 text-white">
-                      <option>All Types</option>
-                      <option>Photographs</option>
-                      <option>Illustrations</option>
-                      <option>Vector Graphics</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-white/70 text-sm mb-2">License Type</label>
-                    <select className="w-full bg-secondary/50 border border-white/10 rounded-md p-2 text-white">
-                      <option>All Licenses</option>
-                      <option>Free</option>
-                      <option>Premium</option>
-                      <option>Editorial</option>
-                    </select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-white/70 text-sm mb-2">Sort By</label>
-                    <select className="w-full bg-secondary/50 border border-white/10 rounded-md p-2 text-white">
-                      <option>Newest First</option>
-                      <option>Oldest First</option>
-                      <option>Most Popular</option>
-                      <option>Alphabetical</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <div className={`grid gap-6 ${
-              gridView === "default" 
-                ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4" 
-                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-            }`}>
-              {filteredImages.map(image => (
-                <ImageCard
-                  key={image.id}
-                  id={image.id}
-                  src={image.src}
-                  title={image.title}
-                  category={image.category}
-                  isPremium={image.isPremium}
-                  isBlurred={image.isBlurred}
-                />
-              ))}
-            </div>
-            
-            {filteredImages.length === 0 && (
-              <div className="py-16 text-center">
-                <p className="text-white/70 mb-4">No images found matching your search criteria.</p>
-                <Button 
-                  variant="outline"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setActiveCategory("All");
-                    setFilteredImages(galleryImages);
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              </div>
-            )}
-            
-            {filteredImages.length > 0 && (
-              <div className="mt-12 text-center">
-                <Button 
-                  variant="outline" 
-                  className="border-white/20 text-white hover:bg-white/10"
-                >
-                  Load More
-                </Button>
-              </div>
-            )}
+            <GalleryGrid 
+              images={filteredImages}
+              gridView={gridView}
+              onResetFilters={handleResetFilters}
+              onLoadMore={handleLoadMore}
+            />
           </div>
         </section>
       </main>
