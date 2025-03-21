@@ -1,21 +1,57 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const navigate = useNavigate();
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(isLogin ? "Login attempt" : "Register attempt", { email, password, name });
-    // Here we would handle authentication in a real app
+    setIsLoading(true);
+    
+    // Simulate authentication/registration
+    setTimeout(() => {
+      if (isLogin) {
+        // Login logic
+        console.log("Login attempt", { email, password });
+        // Store user data in localStorage for simple auth simulation
+        const user = { name: "Test User", email, isAuthenticated: true };
+        localStorage.setItem("cannavisuals_user", JSON.stringify(user));
+        toast.success("Login successful!");
+        navigate("/dashboard");
+      } else {
+        // Registration logic
+        console.log("Register attempt", { email, password, name });
+        // Store user data in localStorage for simple auth simulation
+        const user = { name, email, isAuthenticated: true };
+        localStorage.setItem("cannavisuals_user", JSON.stringify(user));
+        toast.success("Account created successfully!");
+        navigate("/dashboard");
+      }
+      setIsLoading(false);
+    }, 1000); // Simulate network delay
   };
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const user = localStorage.getItem("cannavisuals_user");
+    if (user) {
+      const userData = JSON.parse(user);
+      if (userData.isAuthenticated) {
+        navigate("/dashboard");
+      }
+    }
+  }, [navigate]);
 
   return (
     <>
@@ -98,8 +134,19 @@ const Login = () => {
               <Button 
                 type="submit" 
                 className="w-full bg-cannabis-600 hover:bg-cannabis-700 text-white"
+                disabled={isLoading}
               >
-                {isLogin ? "Sign In" : "Create Account"}
+                {isLoading ? (
+                  <span className="inline-flex items-center">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {isLogin ? "Signing In..." : "Creating Account..."}
+                  </span>
+                ) : (
+                  isLogin ? "Sign In" : "Create Account"
+                )}
               </Button>
             </form>
             
