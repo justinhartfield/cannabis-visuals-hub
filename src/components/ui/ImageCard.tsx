@@ -5,7 +5,7 @@ import Chip from "./Chip";
 import { cn } from "@/lib/utils";
 import { ImageMetadata } from "@/types/imageTypes";
 
-interface ImageCardProps extends Omit<ImageMetadata, 'contentUrl'> {
+interface ImageCardProps extends Partial<Omit<ImageMetadata, 'contentUrl'>> {
   src: string;
   className?: string;
 }

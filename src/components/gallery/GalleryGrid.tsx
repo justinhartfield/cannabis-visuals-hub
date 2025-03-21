@@ -37,6 +37,8 @@ const GalleryGrid = ({ images, gridView, onResetFilters, onLoadMore }: GalleryGr
             category={image.category}
             isPremium={image.isPremium}
             isBlurred={image.isBlurred}
+            // These properties are now optional in ImageCardProps, 
+            // so we don't need to provide them explicitly
           />
         ))}
       </div>
