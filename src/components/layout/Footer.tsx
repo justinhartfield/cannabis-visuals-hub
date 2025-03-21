@@ -22,6 +22,7 @@ const Footer = () => {
         { name: "Endpoints", url: "/api-docs#endpoints" },
         { name: "Rate Limits", url: "/api-docs#rate-limits" },
         { name: "Authentication", url: "/api-docs#authentication" },
+        { name: "CannHaus API", url: "https://cannahausapi.com", external: true },
       ],
     },
     {
@@ -72,12 +73,24 @@ const Footer = () => {
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>
-                    <Link
-                      to={link.url}
-                      className="text-muted-foreground text-sm hover:text-cannabis-400 transition-colors"
-                    >
-                      {link.name}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground text-sm hover:text-cannabis-400 transition-colors flex items-center gap-1"
+                      >
+                        {link.name}
+                        <span className="text-xs">↗</span>
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.url}
+                        className="text-muted-foreground text-sm hover:text-cannabis-400 transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
