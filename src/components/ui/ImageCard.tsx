@@ -3,22 +3,19 @@ import { useState } from "react";
 import { Download, Info, Lock } from "lucide-react";
 import Chip from "./Chip";
 import { cn } from "@/lib/utils";
+import { ImageMetadata } from "@/types/imageTypes";
 
-interface ImageCardProps {
-  id: string;
+interface ImageCardProps extends Omit<ImageMetadata, 'contentUrl'> {
   src: string;
-  title: string;
-  category: string;
-  isPremium?: boolean;
-  isBlurred?: boolean;
   className?: string;
 }
 
 const ImageCard = ({
   id,
   src,
-  title,
+  name,
   category,
+  subcategory,
   isPremium = false,
   isBlurred = false,
   className,
@@ -47,7 +44,7 @@ const ImageCard = ({
         
         <img
           src={src}
-          alt={title}
+          alt={name}
           className={cn(
             "w-full h-full object-cover transition-all duration-700 scale-105",
             isHovered ? "scale-110" : "scale-105",
@@ -63,7 +60,7 @@ const ImageCard = ({
         
         <div className="absolute top-2 left-2 z-10">
           <Chip variant={isPremium ? "primary" : "default"} size="sm">
-            {category}
+            {subcategory || category}
           </Chip>
         </div>
         
@@ -75,7 +72,7 @@ const ImageCard = ({
       </div>
       
       <div className="p-3 z-10 relative">
-        <h3 className="text-white font-medium truncate">{title}</h3>
+        <h3 className="text-white font-medium truncate">{name}</h3>
         
         <div className="flex items-center justify-between mt-2">
           <div className="flex gap-2">

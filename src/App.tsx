@@ -11,6 +11,7 @@ import ApiDocs from "./pages/ApiDocs";
 import Pricing from "./pages/Pricing";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
+import ImageDetail from "./pages/ImageDetail";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/gallery" element={<Gallery />} />
+          <Route path="/gallery/:id" element={<ImageDetail />} />
           <Route path="/api-docs" element={<ApiDocs />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/login" element={<Login />} />
