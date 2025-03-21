@@ -43,7 +43,7 @@
   }
 
   body {
-    @apply bg-background text-foreground selection:bg-cannabis-600/30 selection:text-white scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary;
+    @apply bg-background text-foreground selection:bg-cannabis-600/30 selection:text-white scrollbar-thin;
     background-image: radial-gradient(circle at top right, rgba(123, 31, 162, 0.5) 0%, transparent 50%), 
                       radial-gradient(circle at bottom left, rgba(103, 58, 183, 0.3) 0%, transparent 50%);
     background-attachment: fixed;
